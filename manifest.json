@@ -1,13 +1,10 @@
 {
-  "name": "Estoque Lofi",
+  "name": "Estoque Doméstico",
   "short_name": "Estoque",
-  "description": "Controle simples de estoque e consumo",
   "start_url": ".",
-  "scope": ".",
   "display": "standalone",
-  "background_color": "#121212",
-  "theme_color": "#121212",
-  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#0b1f0b",
   "icons": [
     {
       "src": "icon-192.png",
