@@ -4,62 +4,33 @@
   <meta charset="UTF-8">
   <title>Estoque Doméstico</title>
 
-  <!-- Fonte pixel / lofi -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2b2b2b">
+  <meta name="theme-color" content="#0b1f0b">
 </head>
 
 <body>
 
-  <h1>📦 Estoque Doméstico</h1>
+  <h1>▌ ESTOQUE DOMÉSTICO ▐</h1>
 
-  <!-- FORMULÁRIO DE NOVO ITEM -->
   <section id="form">
-    <h2>➕ Novo item</h2>
+    <h2>ADICIONAR ITEM</h2>
 
-    <input
-      id="nome"
-      type="text"
-      placeholder="Nome do item (ex: Papel higiênico)"
-    >
+    <input id="nome" placeholder="Nome do item">
+    <input id="categoria" placeholder="Categoria">
+    <input id="atual" type="number" placeholder="Quantidade atual">
+    <input id="meta" type="number" placeholder="Meta anual">
 
-    <input
-      id="categoria"
-      type="text"
-      placeholder="Categoria (ex: Limpeza, Higiene, Alimentos)"
-    >
-
-    <input
-      id="atual"
-      type="number"
-      placeholder="Quantidade atual"
-    >
-
-    <input
-      id="meta"
-      type="number"
-      placeholder="Meta anual"
-    >
-
-    <button onclick="adicionarItem()">Adicionar item</button>
+    <button onclick="adicionarItem()">[ ADICIONAR ]</button>
   </section>
 
-  <!-- LISTA DE ESTOQUE -->
   <section id="estoque"></section>
 
-  <!-- PLANO MENSAL -->
-  <button onclick="gerarPlano()">🛒 Plano de compra do mês</button>
+  <button onclick="gerarPlano()">[ PLANO DO MÊS ]</button>
 
   <section id="plano"></section>
 
-  <!-- SCRIPT -->
   <script src="app.js"></script>
-
 </body>
 </html>
+
