@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Estoque Doméstico</title>
 
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="main/icon-192.png">
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./main/icon-192.png">
 
 <style>
 :root{
@@ -24,13 +25,19 @@
 body{margin:0;background:var(--bg);color:var(--text)}
 
 header{
-  display:flex;align-items:center;gap:12px;
-  padding:14px;border-bottom:2px solid var(--border)
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border-bottom:2px solid var(--border)
 }
+
 header img{
-  width:40px;height:40px;
+  width:40px;
+  height:40px;
   image-rendering:pixelated
 }
+
 h1{margin:0;font-size:1.3rem}
 
 main{padding:16px}
@@ -38,16 +45,20 @@ main{padding:16px}
 section{
   background:var(--panel);
   border:2px solid var(--border);
-  padding:12px;margin-bottom:16px
+  padding:12px;
+  margin-bottom:16px
 }
 
 h2{margin:0 0 8px 0;font-size:1.1rem}
 
 input,button{
-  background:black;color:var(--text);
+  background:black;
+  color:var(--text);
   border:1px solid var(--border);
-  padding:5px;margin:3px 0
+  padding:5px;
+  margin:3px 0
 }
+
 button{cursor:pointer}
 button.danger{color:var(--danger);border-color:var(--danger)}
 
@@ -55,12 +66,14 @@ button.danger{color:var(--danger);border-color:var(--danger)}
   border:1px solid var(--border);
   margin-bottom:10px
 }
+
 .cat-header{
   padding:8px;
   cursor:pointer;
   background:#07160e;
   font-weight:bold
 }
+
 .cat-body{padding:8px;display:none}
 
 .item{
@@ -72,8 +85,10 @@ button.danger{color:var(--danger);border-color:var(--danger)}
 .progress{
   background:black;
   border:1px solid var(--border);
-  height:12px;margin-top:4px
+  height:12px;
+  margin-top:4px
 }
+
 .bar{height:100%;background:var(--accent)}
 .low .bar{background:var(--danger)}
 .mid .bar{background:var(--warn)}
@@ -85,7 +100,7 @@ button.danger{color:var(--danger);border-color:var(--danger)}
 <body>
 
 <header>
-  <img src="main/icon-192.png">
+  <img src="./main/icon-192.png" alt="Ícone">
   <h1>Estoque Doméstico</h1>
 </header>
 
@@ -112,7 +127,6 @@ button.danger{color:var(--danger);border-color:var(--danger)}
 const KEY="estoque_domestico_vfinal";
 
 const baseItems=[
-  // ALIMENTOS
   {name:"Arroz",cat:"Alimentos",qty:16,goal:48},
   {name:"Feijão",cat:"Alimentos",qty:4,goal:24},
   {name:"Macarrão parafuso",cat:"Alimentos",qty:2,goal:24},
@@ -126,12 +140,10 @@ const baseItems=[
   {name:"Geleia de framboesa",cat:"Alimentos",qty:1,goal:4},
   {name:"Café descafeinado",cat:"Alimentos",qty:0.25,goal:2},
 
-  // LIMPEZA
   {name:"Papel toalha",cat:"Limpeza",qty:1,goal:6},
   {name:"Bucha de cozinha",cat:"Limpeza",qty:8,goal:24},
   {name:"Sabão em barra",cat:"Limpeza",qty:10,goal:24},
 
-  // HIGIENE
   {name:"Sabonete antibacteriano",cat:"Higiene",qty:14,goal:48},
   {name:"Sabonete comum",cat:"Higiene",qty:7,goal:48},
   {name:"Desodorante antibacteriano",cat:"Higiene",qty:1,goal:12},
