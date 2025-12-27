@@ -1,5 +1,5 @@
 :root {
-    --green: #2ecc71; /* Verde fósforo terminal */
+    --green: #2ecc71;
     --glow: rgba(46, 204, 113, 0.4);
 }
 
@@ -15,7 +15,7 @@
 * { box-sizing: border-box; font-family: 'Courier New', monospace; }
 
 body { 
-    background-color: #000; /* Fundo preto absoluto */
+    background-color: #000; 
     color: var(--green); 
     margin: 0; 
     padding: 10px;
