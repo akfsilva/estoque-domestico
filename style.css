@@ -3,6 +3,8 @@
     --fallout-bg: #050a05;
     --fallout-red: #ff4b4b;
     --fallout-border: #144d1a;
+    --fallout-cyan: #00ffff;
+    --fallout-gold: #ffd700;
 }
 
 body {
@@ -12,6 +14,24 @@ body {
     text-transform: uppercase;
     margin: 0;
     padding: 10px;
+    line-height: 1.2;
+}
+
+/* Animação Scanline */
+.scanline {
+    width: 100%;
+    height: 100px;
+    z-index: 100;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(32, 255, 57, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+    position: fixed;
+    bottom: 100%;
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes scanline {
+    0% { bottom: 100%; }
+    100% { bottom: -100%; }
 }
 
 header {
@@ -20,138 +40,98 @@ header {
     border: 2px solid var(--fallout-green);
     padding: 10px;
     margin-bottom: 20px;
+    background: rgba(32, 255, 57, 0.05);
 }
 
-.logo {
-    width: 40px;
-    margin-right: 15px;
-    filter: brightness(1.2);
+.logo { width: 40px; margin-right: 15px; filter: brightness(1.2); }
+.container { max-width: 600px; margin: 0 auto; }
+
+.card, .category { 
+    border: 2px solid var(--fallout-green); 
+    padding: 12px; 
+    margin-bottom: 15px; 
+    background: rgba(5, 10, 5, 0.95);
+    box-shadow: inset 0 0 15px rgba(32, 255, 57, 0.1);
 }
 
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.card, .category {
-    border: 2px solid var(--fallout-green);
-    padding: 10px;
-    margin-bottom: 15px;
-}
-
-.section-title, .cat-header {
-    color: var(--fallout-green);
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    cursor: pointer;
+.section-title, .cat-header { 
+    color: var(--fallout-green); 
+    font-size: 1.1rem; 
+    margin-bottom: 12px; 
+    cursor: pointer; 
     font-weight: bold;
+    border-bottom: 1px solid var(--fallout-border);
+    padding-bottom: 5px;
 }
 
 input {
-    background: transparent;
+    background: rgba(32, 255, 57, 0.05);
     border: 1px solid var(--fallout-green);
     color: var(--fallout-green);
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
     box-sizing: border-box;
     font-family: inherit;
 }
 
-.input-row {
-    display: flex;
-    gap: 10px;
-}
-
-label {
-    font-size: 0.7rem;
-    display: block;
-    margin-bottom: 2px;
-}
+.input-row { display: flex; gap: 10px; }
+label { font-size: 0.65rem; display: block; margin-bottom: 4px; opacity: 0.9; }
 
 button {
     background: transparent;
     border: 1px solid var(--fallout-green);
     color: var(--fallout-green);
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     cursor: pointer;
     font-weight: bold;
     font-family: inherit;
-    margin-top: 5px;
+    transition: all 0.2s;
 }
 
-button:active {
-    background: var(--fallout-green);
-    color: black;
-}
+button:hover { background: rgba(32, 255, 57, 0.1); }
+button:active { background: var(--fallout-green); color: black; }
 
-.item {
-    border-top: 1px solid var(--fallout-border);
-    padding: 15px 0;
-}
+/* Estilo dos Itens da Lista */
+.item { border-top: 1px solid var(--fallout-border); padding: 15px 0; }
+.item-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: bold; }
+.unit-label { font-size: 0.75rem; color: #888; }
 
-.item-info {
+.suggested-box {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px dashed var(--fallout-cyan);
+    padding: 8px;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: var(--fallout-cyan);
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
-    font-weight: bold;
+    align-items: center;
 }
 
-.controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
+.controls { display: flex; gap: 10px; margin-bottom: 10px; }
+.controls div { flex: 1; }
 
-.controls div {
-    flex: 1;
-}
+.progress { width: 100%; height: 14px; border: 1px solid var(--fallout-green); margin-bottom: 5px; background: rgba(32, 255, 57, 0.05); }
+.bar { height: 100%; background: var(--fallout-green); transition: width 0.5s ease-in-out; }
+.low .bar { background: var(--fallout-red); }
 
-.progress {
-    width: 100%;
-    height: 12px;
-    border: 1px solid var(--fallout-green);
-    margin-bottom: 5px;
-    background: rgba(32, 255, 57, 0.1);
-}
+.alert { color: var(--fallout-red); font-size: 0.75rem; text-align: center; margin: 8px 0; animation: blink 1.5s infinite; font-weight: bold; }
+@keyframes blink { 50% { opacity: 0.2; } }
 
-.bar {
-    height: 100%;
-    background: var(--fallout-green);
-}
+.danger { border-color: var(--fallout-red); color: var(--fallout-red); margin-top: 10px; font-size: 0.7rem; }
 
-.low .bar { 
-    background: var(--fallout-red); 
-}
+/* Variações de Cores para Seções */
+.calculator { border-color: var(--fallout-cyan); }
+.calculator .section-title { color: var(--fallout-cyan); }
+.calculator input { border-color: var(--fallout-cyan); color: var(--fallout-cyan); }
+.btn-cyan { border-color: var(--fallout-cyan); color: var(--fallout-cyan); }
 
-.alert {
-    color: var(--fallout-red);
-    font-size: 0.8rem;
-    text-align: center;
-    margin: 5px 0;
-    animation: blink 1s infinite;
-}
+.terminal { border-color: var(--fallout-gold); }
+.terminal .section-title { color: var(--fallout-gold); }
+.btn-group { display: flex; gap: 10px; }
 
-@keyframes blink {
-    50% { opacity: 0; }
-}
-
-.danger {
-    border-color: var(--fallout-red);
-    color: var(--fallout-red);
-    margin-top: 10px;
-}
-
-.terminal {
-    border-color: #ffd700;
-}
-
-.terminal .section-title {
-    color: #ffd700;
-}
-
-.btn-group {
-    display: flex;
-    gap: 10px;
-}
+.ref-table { border-color: var(--fallout-gold); background: #000; position: sticky; top: 5px; z-index: 101; box-shadow: 0 0 20px rgba(0,0,0,1); }
+.ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.7rem; }
+.btn-ref-close { border-color: var(--fallout-gold); color: var(--fallout-gold); }
