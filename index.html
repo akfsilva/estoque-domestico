@@ -10,28 +10,66 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-
+    <div class="scanline"></div>
+    
     <header>
         <img src="icon-192.png" alt="Vault Boy" class="logo">
         <h1>VAULT-TEC STOCK</h1>
     </header>
 
     <div class="container">
-        <section class="card">
-            <h2 class="section-title">LOG NOVO ITEM</h2>
-            <input type="text" id="n" placeholder="Nome do Item">
-            <input type="text" id="c" placeholder="Categoria">
+        <section class="card ref-table" id="ref-table" style="display:none;">
+            <h2 class="section-title" style="color:#ffd700">REF. DIEESE (CONS. DIA/PESSOA)</h2>
+            <div class="ref-grid">
+                <span><b>ARROZ:</b> 0.100 KG</span>
+                <span><b>FEIJAO:</b> 0.150 KG</span>
+                <span><b>ACUCAR:</b> 0.100 KG</span>
+                <span><b>CAFE:</b> 0.020 KG</span>
+                <span><b>OLEO:</b> 0.030 L</span>
+                <span><b>FARINHA:</b> 0.050 KG</span>
+                <span><b>LEITE:</b> 0.200 L</span>
+                <span><b>CARNE:</b> 0.220 KG</span>
+                <span><b>MANTEIGA:</b> 0.025 KG</span>
+                <span><b>BATATA:</b> 0.200 KG</span>
+                <span><b>TOMATE:</b> 0.300 KG</span>
+                <span><b>AGUA:</b> 3.000 L</span>
+            </div>
+            <button onclick="toggle('ref-table')" class="btn-ref-close">FECHAR REFERÊNCIA</button>
+        </section>
+
+        <section class="card calculator">
+            <h2 class="section-title">SIMULADOR DE PROVISÕES</h2>
             <div class="input-row">
                 <div>
-                    <label>ATUAL</label>
-                    <input type="number" id="q" value="0">
+                    <label>Nº DE PESSOAS</label>
+                    <input type="number" id="calc_pessoas" value="1" min="1">
                 </div>
                 <div>
-                    <label>META</label>
-                    <input type="number" id="g" value="0">
+                    <label>MESES</label>
+                    <input type="number" id="calc_meses" value="12" min="1">
                 </div>
             </div>
-            <button onclick="add()">EXECUTAR ENTRADA</button>
+            <button onclick="toggle('ref-table')" class="btn-cyan">TABELA DE CONSUMO (DIEESE)</button>
+        </section>
+
+        <section class="card">
+            <h2 class="section-title">LOG NOVO ITEM</h2>
+            <input type="text" id="n" placeholder="NOME DO ITEM">
+            <div class="input-row">
+                <input type="text" id="c" placeholder="CATEGORIA">
+                <input type="text" id="u" placeholder="UNID (KG/L/UN)" style="width: 100px;">
+            </div>
+            <div class="input-row">
+                <div>
+                    <label>ESTOQUE ATUAL</label>
+                    <input type="number" id="q" value="0" step="0.01">
+                </div>
+                <div>
+                    <label>CONS. DIA/PESSOA</label>
+                    <input type="number" id="cons" value="0" step="0.001">
+                </div>
+            </div>
+            <button onclick="add()">EXECUTAR ENTRADA DE DADOS</button>
         </section>
 
         <div id="estoque"></div>
