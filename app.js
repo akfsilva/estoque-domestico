@@ -1,4 +1,4 @@
-const KEY = "vault_stock_ultimate_v26";
+const KEY = "vault_stock_final_v25";
 
 const baseItems = [
   {name:"Arroz", cat:"ALIMENTOS", unit:"KG", qty:16, goal:48, cons:0.100, note:""},
@@ -27,7 +27,8 @@ function save(){ localStorage.setItem(KEY, JSON.stringify(items)); }
 function calculateGoal(dailyCons) {
     const p = +document.getElementById('calc_pessoas').value || 1;
     const m = +document.getElementById('calc_meses').value || 1;
-    return (dailyCons * p * (m * 30.41));
+    // Retorna valor arredondado
+    return Math.round(dailyCons * p * (m * 30.41));
 }
 
 window.add = function(){
@@ -86,14 +87,14 @@ function render(){
             const p = i.goal ? Math.min(100, (i.qty / i.goal) * 100) : 0;
             return `
                 <div class="item">
-                    <div class="item-info"><b>> ${i.name.toUpperCase()}</b> <span>${p.toFixed(0)}%</span></div>
+                    <div class="item-info"><b>> ${i.name.toUpperCase()}</b> <span>${i.qty} ${i.unit} (${p.toFixed(0)}%)</span></div>
                     <div class="suggested-box">
-                        <span>SUGESTÃO: ${suggested.toFixed(2)} ${i.unit}</span>
+                        <span>SUGESTÃO: ${suggested} ${i.unit}</span>
                         <button style="width:auto; padding:2px 8px; font-size:9px" onclick="applyMeta(${i.id}, ${suggested})">APLICAR</button>
                     </div>
                     <div class="controls">
-                        <div><label>ESTOQUE</label><input type="number" step="0.01" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)"></div>
-                        <div><label>META</label><input type="number" step="0.01" value="${i.goal}" onchange="upd(${i.id},'goal',this.value)"></div>
+                        <div><label>ESTOQUE (${i.unit})</label><input type="number" step="0.01" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)"></div>
+                        <div><label>META (${i.unit})</label><input type="number" step="1" value="${Math.round(i.goal)}" onchange="upd(${i.id},'goal',this.value)"></div>
                     </div>
                     <div class="progress ${p < 30 ? 'low' : ''}"><div class="bar" style="width:${p}%"></div></div>
                     <div style="margin-top:10px">
