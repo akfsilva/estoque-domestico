@@ -1,18 +1,19 @@
 {
-  "name": "Estoque Doméstico",
-  "short_name": "Estoque",
+  "name": "Vault-Tec Stock Manager",
+  "short_name": "VaultStock",
+  "description": "Controle de estoque doméstico de emergência",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b1a12",
-  "theme_color": "#0b1a12",
+  "theme_color": "#2cff6a",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
