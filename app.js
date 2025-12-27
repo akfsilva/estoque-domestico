@@ -1,4 +1,4 @@
-// Mudamos a chave para v2 para limpar dados antigos que estavam duplicando
+// Chave v2 para evitar conflitos com dados antigos
 const KEY = "estoque_v2";
 
 const baseItems = [
@@ -25,9 +25,10 @@ const baseItems = [
   {name:"Pasta de dente comum",cat:"HIGIENE",qty:3,goal:12}
 ];
 
+// Carrega do LocalStorage ou usa a lista base inicial
 let items = JSON.parse(localStorage.getItem(KEY)) || baseItems.map(i => ({...i, id: Date.now() + Math.random()}));
 
-// Garante que tudo carregado esteja em maiúsculas e sem espaços extras
+// Garante que categorias estejam limpas e em maiúsculas
 items = items.map(i => ({...i, cat: i.cat.trim().toUpperCase()}));
 
 function save(){ localStorage.setItem(KEY, JSON.stringify(items)); }
@@ -44,16 +45,20 @@ window.add = function(){
       qty: +document.getElementById('q').value || 0,
       goal: +document.getElementById('g').value || 0
     });
-    save(); render();
-    document.getElementById('n').value = document.getElementById('c').value = "";
-    document.getElementById('q').value = document.getElementById('g').value = "";
+    save(); 
+    render();
+    document.getElementById('n').value = "";
+    document.getElementById('c').value = "";
+    document.getElementById('q').value = "0";
+    document.getElementById('g').value = "0";
   }
 };
 
 window.del = function(id){
   if(confirm("DELETAR ITEM DO SISTEMA?")){
     items = items.filter(i => i.id !== id);
-    save(); render();
+    save(); 
+    render();
   }
 };
 
@@ -62,7 +67,7 @@ window.upd = function(id, key, val){
   if(item) {
     item[key] = parseFloat(val) || 0;
     save();
-    render(); // Renderização simplificada para garantir atualização visual
+    render(); 
   }
 };
 
@@ -86,7 +91,8 @@ window.importData = function(event) {
     reader.onload = function(e) {
         try {
             items = JSON.parse(e.target.result).map(i => ({...i, cat: i.cat.trim().toUpperCase()}));
-            save(); location.reload();
+            save(); 
+            render();
         } catch(err) { alert("ERRO NO ARQUIVO!"); }
     };
     reader.readAsText(event.target.files[0]);
@@ -97,7 +103,6 @@ function render(){
   if(!out) return;
   out.innerHTML = "";
 
-  // Obtém categorias únicas sempre em MAIÚSCULAS
   const uniqueCats = [...new Set(items.map(i => i.cat))].sort();
 
   uniqueCats.forEach(cat => {
@@ -109,15 +114,27 @@ function render(){
     
     const itemsHtml = catItems.map(i => {
       const p = i.goal ? Math.min(100, (i.qty / i.goal) * 100) : 0;
-      const cls = p < 30 ? "low" : p < 60 ? "mid" : "";
+      const cls = p < 30 ? "low" : "";
+      
       return `
-        <div class="item" data-id="${i.id}">
-          <div class="item-info"><b>> ${i.name}</b><span class="pct">${p.toFixed(0)}%</span></div>
-          <div class="controls">
-            <div><label>QTD</label><input type="number" step="0.01" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)"></div>
-            <div><label>META</label><input type="number" step="0.01" value="${i.goal}" onchange="upd(${i.id},'goal',this.value)"></div>
+        <div class="item">
+          <div class="item-info">
+            <b>> ${i.name}</b>
+            <span class="pct">${p.toFixed(0)}%</span>
           </div>
-          <div class="progress ${cls}"><div class="bar" style="width:${p}%"></div></div>
+          <div class="controls">
+            <div>
+              <label>QTD</label>
+              <input type="number" step="0.01" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)">
+            </div>
+            <div>
+              <label>META</label>
+              <input type="number" step="0.01" value="${i.goal}" onchange="upd(${i.id},'goal',this.value)">
+            </div>
+          </div>
+          <div class="progress ${cls}">
+            <div class="bar" style="width:${p}%"></div>
+          </div>
           ${p < 30 ? '<div class="alert">ALERTA: ESTOQUE BAIXO</div>' : ''}
           <button class="danger" onclick="del(${i.id})">REMOVER ITEM</button>
         </div>`;
@@ -125,9 +142,10 @@ function render(){
 
     catDiv.innerHTML = `
       <div class="cat-header" onclick="toggle('${cid}')">${cat}</div>
-      <div class="cat-body" id="${cid}" style="display:none;">${itemsHtml}</div>`;
+      <div id="${cid}" style="display:none;">${itemsHtml}</div>`;
     out.appendChild(catDiv);
   });
 }
 
+// Inicialização
 render();
