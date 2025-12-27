@@ -24,8 +24,8 @@ const baseItems = [
   {name:"PAPEL TOALHA (PACOTE C/ 2)", cat:"LIMPEZA", unit:"UN", qty:1, goal:12, cons:0.050, persons:1, note:""}
 ];
 
-// Estado global para lembrar quais categorias estão abertas
 let collapsedState = {};
+let tableVisible = false;
 
 let items = JSON.parse(localStorage.getItem(KEY)) || baseItems.map(i => ({...i, id: Date.now() + Math.random()}));
 
@@ -46,6 +46,13 @@ function calculateGoal(dailyCons, itemPersons) {
 window.toggleCat = function(catName) {
     collapsedState[catName] = !collapsedState[catName];
     render();
+};
+
+window.toggleTable = function() {
+    tableVisible = !tableVisible;
+    const content = document.getElementById('refTableContent');
+    if(tableVisible) content.classList.remove('hidden');
+    else content.classList.add('hidden');
 };
 
 window.add = function(){
