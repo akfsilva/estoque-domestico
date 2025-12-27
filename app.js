@@ -1,9 +1,5 @@
 const KEY = "vault_stock_final_v25";
 
-if (navigator.storage && navigator.storage.persist) {
-    navigator.storage.persist();
-}
-
 const baseItems = [
   {name:"Arroz", cat:"ALIMENTOS", unit:"KG", qty:16, goal:48, cons:0.100, note:""},
   {name:"Feijão", cat:"ALIMENTOS", unit:"KG", qty:4, goal:24, cons:0.150, note:""},
@@ -81,34 +77,24 @@ window.applyMeta = function(id, val) {
 };
 
 window.del = function(id){
-    if(confirm("CONFIRMAR REMOÇÃO?")){ items = items.filter(i => i.id !== id); save(); render(); }
+    if(confirm("REMOVER ITEM?")){ items = items.filter(i => i.id !== id); save(); render(); }
 };
 
-window.toggle = function(id){
-    const el = document.getElementById(id);
-    if(el) el.style.display = (el.style.display === "none") ? "block" : "none";
-};
-
-document.addEventListener('input', (e) => {
-    if(e.target.id === 'calc_pessoas' || e.target.id === 'calc_meses') render();
-});
-
-function render(){
+window.render = function(){
     const out = document.getElementById("estoque");
     out.innerHTML = "";
     const cats = [...new Set(items.map(i => i.cat.trim().toUpperCase()))].sort();
     
     cats.forEach(cat => {
-        const cid = "cat_" + cat.replace(/[^A-Z0-9]/g, "");
         const catItems = items.filter(i => i.cat.trim().toUpperCase() === cat);
         const html = catItems.map(i => {
             const suggested = calculateGoal(i.cons || 0);
             const p = i.goal ? Math.min(100, (i.qty / i.goal) * 100) : 0;
             return `
                 <div class="item">
-                    <div class="item-info"><b>> ${i.name}</b> <span>${i.qty} ${i.unit} (${p.toFixed(0)}%)</span></div>
+                    <div class="item-info"><span>> ${i.name}</span> <span>${i.qty} ${i.unit} (${p.toFixed(0)}%)</span></div>
                     <div class="suggested-box">
-                        <span>SUGESTÃO: ${suggested} ${i.unit}</span>
+                        <span>SUGESTAO: ${suggested} ${i.unit}</span>
                         <button style="width:auto; padding:2px 8px; font-size:9px" onclick="applyMeta(${i.id}, ${suggested})">APLICAR</button>
                     </div>
                     <div class="controls">
@@ -117,32 +103,17 @@ function render(){
                         <div><label>UNID.</label><input type="text" value="${i.unit}" onchange="upd(${i.id},'unit',this.value)"></div>
                     </div>
                     <div class="progress ${p < 30 ? 'low' : ''}"><div class="bar" style="width:${p}%"></div></div>
-                    <div>
-                        <label>NOTAS</label>
-                        <input type="text" class="note-input" value="${i.note || ''}" placeholder="..." onchange="upd(${i.id},'note',this.value)">
-                    </div>
+                    <input type="text" class="note-input" style="width:100%; background:transparent; border:1px dashed var(--green); color:var(--green); font-size:10px; padding:5px;" value="${i.note || ''}" placeholder="NOTAS" onchange="upd(${i.id},'note',this.value)">
                     <button class="danger" onclick="del(${i.id})">REMOVER</button>
                 </div>`;
         }).join("");
         
         const div = document.createElement("div");
         div.className = "category";
-        div.innerHTML = `<div class="cat-header" onclick="toggle('${cid}')">${cat} [-]</div><div id="${cid}" style="display:block;">${html}</div>`;
+        div.innerHTML = `<div class="cat-header">${cat}</div><div>${html}</div>`;
         out.appendChild(div);
     });
 }
-
-window.exportData = function() {
-    const blob = new Blob([JSON.stringify(items, null, 2)], {type: "application/json"});
-    const link = document.createElement('a'); link.href = URL.createObjectURL(blob);
-    link.download = `vault_backup.json`; link.click();
-};
-
-window.importData = function(event) {
-    const reader = new FileReader();
-    reader.onload = (e) => { items = JSON.parse(e.target.result); save(); render(); };
-    reader.readAsText(event.target.files[0]);
-};
 
 save();
 render();
