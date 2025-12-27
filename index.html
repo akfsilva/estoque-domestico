@@ -42,14 +42,16 @@
         <div id="estoque"></div>
 
         <section class="reference-section">
-            <h4 onclick="this.nextElementSibling.classList.toggle('hidden')" style="cursor:pointer">[ TABELA DE REFERÊNCIA (CLIQUE) ]</h4>
-            <div class="ref-table hidden">
-                <div class="ref-row"><span>ARROZ</span><span>6.0 KG</span></div>
-                <div class="ref-row"><span>FEIJÃO</span><span>4.5 KG</span></div>
-                <div class="ref-row"><span>AÇÚCAR</span><span>3.0 KG</span></div>
-                <div class="ref-row"><span>ÓLEO</span><span>1.5 L</span></div>
-                <div class="ref-row"><span>CAFÉ</span><span>0.6 KG</span></div>
-                <div class="ref-row"><span>SAL</span><span>0.5 KG</span></div>
+            <div class="cat-header" onclick="toggleTable()">[ TABELA DE REFERÊNCIA DIEESE ]</div>
+            <div id="refTableContent" class="cat-content hidden">
+                <div class="ref-table">
+                    <div class="ref-row"><span>ARROZ</span><span>6.0 KG</span></div>
+                    <div class="ref-row"><span>FEIJÃO</span><span>4.5 KG</span></div>
+                    <div class="ref-row"><span>AÇÚCAR</span><span>3.0 KG</span></div>
+                    <div class="ref-row"><span>ÓLEO</span><span>1.5 L</span></div>
+                    <div class="ref-row"><span>CAFÉ</span><span>0.6 KG</span></div>
+                    <div class="ref-row"><span>SAL</span><span>0.5 KG</span></div>
+                </div>
             </div>
         </section>
 
