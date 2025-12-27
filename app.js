@@ -1,6 +1,5 @@
-const KEY = "vault_stock_ultimate_v25";
+const KEY = "vault_stock_ultimate_v26";
 
-// LISTA COMPLETA ORIGINAL + LIMPEZA
 const baseItems = [
   {name:"Arroz", cat:"ALIMENTOS", unit:"KG", qty:16, goal:48, cons:0.100, note:""},
   {name:"Feijão", cat:"ALIMENTOS", unit:"KG", qty:4, goal:24, cons:0.150, note:""},
@@ -23,7 +22,6 @@ const baseItems = [
 ];
 
 let items = JSON.parse(localStorage.getItem(KEY)) || baseItems.map(i => ({...i, id: Date.now() + Math.random()}));
-
 function save(){ localStorage.setItem(KEY, JSON.stringify(items)); }
 
 function calculateGoal(dailyCons) {
@@ -64,7 +62,7 @@ window.applyMeta = function(id, val) {
 };
 
 window.del = function(id){
-    if(confirm("CONFIRMAR EXCLUSÃO DE DADOS?")){ items = items.filter(i => i.id !== id); save(); render(); }
+    if(confirm("CONFIRMAR EXCLUSÃO?")){ items = items.filter(i => i.id !== id); save(); render(); }
 };
 
 window.toggle = function(id){
@@ -80,7 +78,6 @@ function render(){
     const out = document.getElementById("estoque");
     out.innerHTML = "";
     const cats = [...new Set(items.map(i => i.cat))].sort();
-
     cats.forEach(cat => {
         const cid = "cat_" + cat.replace(/[^a-zA-Z0-9]/g, "");
         const catItems = items.filter(i => i.cat === cat);
@@ -91,8 +88,8 @@ function render(){
                 <div class="item">
                     <div class="item-info"><b>> ${i.name.toUpperCase()}</b> <span>${p.toFixed(0)}%</span></div>
                     <div class="suggested-box">
-                        <span>OBJETIVO: ${suggested.toFixed(2)} ${i.unit}</span>
-                        <button style="width:auto; padding:2px 8px; font-size:9px" onclick="applyMeta(${i.id}, ${suggested})">CALIBRAR</button>
+                        <span>SUGESTÃO: ${suggested.toFixed(2)} ${i.unit}</span>
+                        <button style="width:auto; padding:2px 8px; font-size:9px" onclick="applyMeta(${i.id}, ${suggested})">APLICAR</button>
                     </div>
                     <div class="controls">
                         <div><label>ESTOQUE</label><input type="number" step="0.01" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)"></div>
@@ -101,12 +98,11 @@ function render(){
                     <div class="progress ${p < 30 ? 'low' : ''}"><div class="bar" style="width:${p}%"></div></div>
                     <div style="margin-top:10px">
                         <label>NOTAS TÉCNICAS</label>
-                        <input type="text" class="note-input" value="${i.note || ''}" placeholder="ADICIONAR OBSERVAÇÕES..." onchange="upd(${i.id},'note',this.value)">
+                        <input type="text" class="note-input" value="${i.note || ''}" placeholder="..." onchange="upd(${i.id},'note',this.value)">
                     </div>
-                    <button class="danger" onclick="del(${i.id})">APAGAR REGISTRO</button>
+                    <button class="danger" onclick="del(${i.id})">REMOVER</button>
                 </div>`;
         }).join("");
-
         const div = document.createElement("div");
         div.className = "category";
         div.innerHTML = `<div class="cat-header" onclick="toggle('${cid}')">${cat} [-]</div><div id="${cid}" style="display:block;">${html}</div>`;
