@@ -3,57 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAULT-TEC STOCK</title>
-    <link rel="icon" type="image/png" href="icon-192.png">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <title>VAULT-TEC STOCK SYSTEM</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
 </head>
 <body>
     <div class="scanline"></div>
+    <div class="crt-overlay"></div>
+
     <header>
-        <img src="icon-192.png" alt="Vault Boy" class="logo">
-        <h1>VAULT-TEC STOCK</h1>
+        <img src="https://raw.githubusercontent.com/Fortis-Solutions/Vault-Stock/main/icon-192.png" alt="Vault Boy" class="logo" onerror="this.style.display='none'">
+        <div class="header-info">
+            <h1>VAULT-TEC STOCK</h1>
+            <span class="version">ESTADO: OPERACIONAL | v2.5</span>
+        </div>
     </header>
 
     <div class="container">
         <section class="card ref-table" id="ref-table" style="display:none;">
-            <h2 class="section-title" style="color:#ffd700">REF. DIEESE (CONS. DIA/PESSOA)</h2>
-            <div style="font-size: 0.65rem; line-height: 1.5; display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                <span><b>ARROZ:</b> 0.100 KG</span>
-                <span><b>FEIJAO:</b> 0.150 KG</span>
-                <span><b>ACUCAR:</b> 0.100 KG</span>
-                <span><b>CAFE:</b> 0.020 KG</span>
-                <span><b>OLEO:</b> 0.030 L</span>
-                <span><b>FARINHA:</b> 0.050 KG</span>
-                <span><b>LEITE:</b> 0.200 L</span>
-                <span><b>CARNE:</b> 0.220 KG</span>
-                <span><b>AGUA:</b> 3.000 L</span>
+            <h2 class="section-title" style="color:var(--fallout-gold)">PARÂMETROS TÉCNICOS (DIEESE)</h2>
+            <div class="grid-ref">
+                <span>ARROZ: 0.100 KG/DIA</span><span>FEIJAO: 0.150 KG/DIA</span>
+                <span>ACUCAR: 0.100 KG/DIA</span><span>CAFE: 0.020 KG/DIA</span>
+                <span>OLEO: 0.030 L/DIA</span><span>FARINHA: 0.050 KG/DIA</span>
+                <span>LEITE: 0.200 L/DIA</span><span>CARNE: 0.220 KG/DIA</span>
+                <span>BATATA: 0.200 KG/DIA</span><span>AGUA: 3.000 L/DIA</span>
             </div>
-            <button onclick="toggle('ref-table')" style="border-color:#ffd700; color:#ffd700; margin-top:10px; font-size: 0.7rem;">FECHAR REFERÊNCIA</button>
+            <button onclick="toggle('ref-table')" style="color:var(--fallout-gold); border-color:var(--fallout-gold); margin-top:10px;">FECHAR TERMINAL</button>
         </section>
 
         <section class="card calculator">
-            <h2 class="section-title">SIMULADOR DE PROVISÕES</h2>
+            <h2 class="section-title" style="color:var(--fallout-cyan)">SIMULADOR DE DEMANDA</h2>
             <div class="input-row">
                 <div>
-                    <label>Nº DE PESSOAS</label>
+                    <label>Nº DE SOBREVIVENTES</label>
                     <input type="number" id="calc_pessoas" value="1" min="1">
                 </div>
                 <div>
-                    <label>MESES</label>
+                    <label>MESES DE RESERVA</label>
                     <input type="number" id="calc_meses" value="12" min="1">
                 </div>
             </div>
-            <button onclick="toggle('ref-table')" style="font-size:0.7rem; border-color:cyan; color:cyan;">TABELA DIEESE</button>
+            <button onclick="toggle('ref-table')" style="color:var(--fallout-cyan); border-color:var(--fallout-cyan)">DADOS MÉDIOS DIEESE</button>
         </section>
 
         <section class="card">
-            <h2 class="section-title">LOG NOVO ITEM</h2>
-            <input type="text" id="n" placeholder="Nome do Item">
+            <h2 class="section-title">REGISTRO DE NOVO SUPRIMENTO</h2>
+            <input type="text" id="n" placeholder="DESCRIÇÃO DO ITEM">
             <div class="input-row">
-                <input type="text" id="c" placeholder="Categoria">
-                <input type="text" id="u" placeholder="Unid (Kg/L/Un)" style="width: 80px;">
+                <input type="text" id="c" placeholder="CATEGORIA (EX: ALIMENTOS)">
+                <input type="text" id="u" placeholder="UNID" style="width:80px">
             </div>
             <div class="input-row">
                 <div>
@@ -65,16 +65,17 @@
                     <input type="number" id="cons" value="0" step="0.001">
                 </div>
             </div>
-            <button onclick="add()">EXECUTAR ENTRADA</button>
+            <input type="text" id="obs" placeholder="NOTAS DE CAMPO (VALIDADE, LOCAL...)">
+            <button onclick="add()" class="btn-main">EXECUTAR ENTRADA NO BANCO</button>
         </section>
 
         <div id="estoque"></div>
 
         <section class="card terminal">
-            <h2 class="section-title">TERMINAL DE DADOS</h2>
+            <h2 class="section-title" style="color:var(--fallout-gold)">SISTEMA DE ARQUIVOS</h2>
             <div class="btn-group">
-                <button onclick="exportData()">EXPORTAR JSON</button>
-                <button onclick="document.getElementById('importFile').click()">IMPORTAR JSON</button>
+                <button onclick="exportData()" style="color:var(--fallout-gold); border-color:var(--fallout-gold)">EXPORTAR BACKUP</button>
+                <button onclick="document.getElementById('importFile').click()" style="color:var(--fallout-gold); border-color:var(--fallout-gold)">IMPORTAR DADOS</button>
                 <input type="file" id="importFile" style="display:none" onchange="importData(event)">
             </div>
         </section>
