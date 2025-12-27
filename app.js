@@ -1,14 +1,23 @@
-const KEY = "vault_stock_v6";
+const KEY = "vault_stock_final_v1";
 
-// Itens Iniciais com base no DIEESE (Consumo diário médio)
+// RECUPERANDO SUA LISTA ORIGINAL + ITENS DIEESE
 const baseItems = [
-  {name:"ARROZ", cat:"ALIMENTOS", unit:"KG", qty:5, goal:36, cons:0.100},
-  {name:"FEIJÃO", cat:"ALIMENTOS", unit:"KG", qty:3, goal:54, cons:0.150},
-  {name:"AÇÚCAR", cat:"ALIMENTOS", unit:"KG", qty:2, goal:36, cons:0.100},
-  {name:"CAFÉ", cat:"ALIMENTOS", unit:"KG", qty:0.5, goal:7.2, cons:0.020},
-  {name:"ÓLEO", cat:"ALIMENTOS", unit:"L", qty:1, goal:10.8, cons:0.030},
-  {name:"LEITE", cat:"ALIMENTOS", unit:"L", qty:6, goal:72, cons:0.200},
-  {name:"ÁGUA POTÁVEL", cat:"ALIMENTOS", unit:"L", qty:20, goal:1080, cons:3.000}
+  // SEUS ITENS ORIGINAIS
+  {name:"Arroz", cat:"ALIMENTOS", unit:"KG", qty:16, goal:48, cons:0.100},
+  {name:"Feijão", cat:"ALIMENTOS", unit:"KG", qty:4, goal:24, cons:0.150},
+  {name:"Macarrão parafuso", cat:"ALIMENTOS", unit:"KG", qty:2, goal:24, cons:0.050},
+  {name:"Sal", cat:"ALIMENTOS", unit:"KG", qty:1, goal:2, cons:0.005},
+  {name:"Açúcar cristal", cat:"ALIMENTOS", unit:"KG", qty:4.5, goal:12, cons:0.100},
+  {name:"Óleo de soja", cat:"ALIMENTOS", unit:"L", qty:3, goal:12, cons:0.030},
+  {name:"Molho de tomate", cat:"ALIMENTOS", unit:"UN", qty:3, goal:24, cons:0.050},
+  {name:"Sardinha", cat:"ALIMENTOS", unit:"UN", qty:2, goal:24, cons:0.040},
+  {name:"Capuccino", cat:"ALIMENTOS", unit:"UN", qty:0.2, goal:1, cons:0.010},
+  {name:"Sabonete antibacteriano", cat:"HIGIENE", unit:"UN", qty:14, goal:48, cons:0.1},
+  {name:"Pasta de dente comum", cat:"HIGIENE", unit:"UN", qty:3, goal:12, cons:0.05},
+  // ITENS EXTRAS DIEESE
+  {name:"Café", cat:"ALIMENTOS", unit:"KG", qty:0.5, goal:7.2, cons:0.020},
+  {name:"Leite Longa Vida", cat:"ALIMENTOS", unit:"L", qty:6, goal:72, cons:0.200},
+  {name:"Água Potável", cat:"ALIMENTOS", unit:"L", qty:20, goal:1080, cons:3.000}
 ];
 
 let items = JSON.parse(localStorage.getItem(KEY)) || baseItems.map(i => ({...i, id: Date.now() + Math.random()}));
@@ -22,17 +31,14 @@ window.add = function(){
   const cons = +document.getElementById('cons').value || 0;
   
   if(n){
-    const suggestedGoal = calculateGoal(cons);
     items.push({
       id: Date.now() + Math.random(),
-      name: n.toUpperCase(), cat: c, unit: u, qty: +document.getElementById('q').value || 0,
-      cons: cons, goal: suggestedGoal || 1
+      name: n, cat: c, unit: u, 
+      qty: +document.getElementById('q').value || 0,
+      cons: cons, goal: calculateGoal(cons) || 1
     });
     save(); render();
-    // Limpar campos
-    document.getElementById('n').value = ""; 
-    document.getElementById('q').value = "0";
-    document.getElementById('cons').value = "0";
+    document.getElementById('n').value = "";
   }
 };
 
@@ -56,15 +62,14 @@ window.applyMeta = function(id, val) {
 };
 
 window.del = function(id){
-  if(confirm("DELETAR REGISTRO PERMANENTEMENTE?")){ items = items.filter(i => i.id !== id); save(); render(); }
+  if(confirm("CONFIRMAR EXCLUSÃO?")){ items = items.filter(i => i.id !== id); save(); render(); }
 };
 
 window.toggle = function(id){
   const el = document.getElementById(id);
-  if(el) el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
+  el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
 };
 
-// Listener para recalcular sugestões em tempo real
 document.addEventListener('input', (e) => {
     if(e.target.id === 'calc_pessoas' || e.target.id === 'calc_meses') render();
 });
@@ -88,26 +93,21 @@ function render(){
             <b>> ${i.name} <span class="unit-label">(${i.unit})</span></b>
             <span>${p.toFixed(0)}%</span>
           </div>
-
           <div class="suggested-box">
-             <span>SUGESTÃO DIEESE: ${suggested.toFixed(2)} ${i.unit}</span>
-             <button style="width:auto; padding:4px 10px; font-size:10px;" onclick="applyMeta(${i.id}, ${suggested})">CALIBRAR</button>
+             <span>SUGESTÃO: ${suggested.toFixed(2)} ${i.unit}</span>
+             <button style="width:auto; padding:2px 8px; font-size:9px;" onclick="applyMeta(${i.id}, ${suggested})">APLICAR</button>
           </div>
-
           <div class="controls">
-            <div><label>ESTOQUE ATUAL</label><input type="number" step="0.01" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)"></div>
-            <div><label>OBJETIVO (META)</label><input type="number" step="0.01" value="${i.goal}" onchange="upd(${i.id},'goal',this.value)"></div>
+            <div><label>ESTOQUE</label><input type="number" step="0.01" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)"></div>
+            <div><label>META</label><input type="number" step="0.01" value="${i.goal}" onchange="upd(${i.id},'goal',this.value)"></div>
           </div>
-
           <div class="progress ${p < 30 ? 'low' : ''}"><div class="bar" style="width:${p}%"></div></div>
-          ${p < 30 ? '<div class="alert">ALERTA: ESTOQUE ABAIXO DA META</div>' : ''}
-
+          ${p < 30 ? '<div class="alert">ALERTA: ESTOQUE BAIXO</div>' : ''}
           <div class="input-row" style="margin-top:10px;">
-             <div style="flex:2"><label>CONSUMO DIA/PESSOA</label><input type="number" step="0.001" value="${i.cons || 0}" onchange="upd(${i.id},'cons',this.value)"></div>
-             <div style="flex:1"><label>UNIDADE</label><input type="text" value="${i.unit}" onchange="upd(${i.id},'unit',this.value)"></div>
+             <div style="flex:2"><label>CONS. DIA/PESSOA</label><input type="number" step="0.001" value="${i.cons || 0}" onchange="upd(${i.id},'cons',this.value)"></div>
+             <div style="flex:1"><label>UNID</label><input type="text" value="${i.unit}" onchange="upd(${i.id},'unit',this.value)"></div>
           </div>
-
-          <button class="danger" onclick="del(${i.id})">REMOVER ITEM</button>
+          <button class="danger" onclick="del(${i.id})">DELETAR</button>
         </div>`;
     }).join("");
 
