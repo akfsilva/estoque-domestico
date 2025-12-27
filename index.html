@@ -5,217 +5,166 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Estoque Doméstico</title>
 
-<!-- PWA -->
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
 
 <style>
-:root{
-  --bg:#0b1a12;
-  --panel:#102a1c;
-  --text:#c9ffd0;
-  --accent:#4cff4c;
-  --warn:#ffcc00;
-  --danger:#ff5555;
-  --border:#2cff6a;
+body {
+  background:#0f1f0f;
+  color:#7CFF7C;
+  font-family: monospace;
+  margin:0;
+  padding:10px;
 }
 
-*{box-sizing:border-box;font-family:"Courier New",monospace}
-
-body{margin:0;background:var(--bg);color:var(--text)}
-
-header{
+h1 {
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:14px;
-  border-bottom:2px solid var(--border)
+  gap:10px;
 }
 
-header img{
-  width:40px;
-  height:40px;
-  image-rendering:pixelated
-}
-
-h1{margin:0;font-size:1.3rem}
-
-main{padding:16px}
-
-section{
-  background:var(--panel);
-  border:2px solid var(--border);
-  padding:12px;
-  margin-bottom:16px
-}
-
-h2{margin:0 0 8px 0;font-size:1.1rem}
-
-input,button{
-  background:black;
-  color:var(--text);
-  border:1px solid var(--border);
-  padding:5px;
-  margin:3px 0
-}
-
-button{cursor:pointer}
-button.danger{color:var(--danger);border-color:var(--danger)}
-
-.category{
-  border:1px solid var(--border);
-  margin-bottom:10px
-}
-
-.cat-header{
-  padding:8px;
+h2 {
   cursor:pointer;
-  background:#07160e;
-  font-weight:bold
+  margin-top:20px;
 }
 
-.cat-body{padding:8px;display:none}
-
-.item{
-  border-bottom:1px dashed var(--border);
-  padding:6px 0
-}
-.item:last-child{border-bottom:none}
-
-.progress{
-  background:black;
-  border:1px solid var(--border);
-  height:12px;
-  margin-top:4px
+.category {
+  border:1px solid #3aff3a;
+  padding:10px;
+  margin-bottom:10px;
 }
 
-.bar{height:100%;background:var(--accent)}
-.low .bar{background:var(--danger)}
-.mid .bar{background:var(--warn)}
+.item {
+  display:flex;
+  gap:5px;
+  margin:5px 0;
+}
 
-.alert{font-size:.8rem;color:var(--danger)}
+input, button {
+  background:#000;
+  color:#7CFF7C;
+  border:1px solid #3aff3a;
+  padding:5px;
+}
+
+button {
+  cursor:pointer;
+}
+
+.progress {
+  height:6px;
+  background:#1f3f1f;
+  margin-top:4px;
+}
+
+.progress-bar {
+  height:6px;
+  background:#7CFF7C;
+  width:0%;
+}
 </style>
 </head>
 
 <body>
 
-<header>
-  <img src="./icon-192.png" alt="Ícone">
-  <h1>Estoque Doméstico</h1>
-</header>
+<h1>
+  <img src="icon-192.png" width="32">
+  Estoque Doméstico
+</h1>
 
-<main>
+<h3>Adicionar item</h3>
+<input id="itemName" placeholder="Item">
+<input id="itemCategory" placeholder="Categoria">
+<input id="itemHave" type="number" placeholder="Qtd atual">
+<input id="itemGoal" type="number" placeholder="Meta anual">
+<button onclick="addItem()">Adicionar</button>
 
-<section>
-<h2>Adicionar item</h2>
-<input id="n" placeholder="Nome">
-<input id="c" placeholder="Categoria">
-<input id="q" type="number" placeholder="Qtd atual">
-<input id="g" type="number" placeholder="Meta anual">
-<br>
-<button onclick="add()">Adicionar</button>
-</section>
-
-<section>
-<h2>Estoque</h2>
-<div id="estoque"></div>
-</section>
-
-</main>
+<div id="categories"></div>
 
 <script>
-const KEY="estoque_domestico_vfinal";
+let data = JSON.parse(localStorage.getItem("estoque")) || {};
 
-const baseItems=[
-  {name:"Arroz",cat:"Alimentos",qty:16,goal:48},
-  {name:"Feijão",cat:"Alimentos",qty:4,goal:24},
-  {name:"Macarrão parafuso",cat:"Alimentos",qty:2,goal:24},
-  {name:"Sal",cat:"Alimentos",qty:1,goal:2},
-  {name:"Açúcar cristal",cat:"Alimentos",qty:4.5,goal:12},
-  {name:"Óleo de soja",cat:"Alimentos",qty:3,goal:12},
-  {name:"Óleo misto",cat:"Alimentos",qty:1,goal:12},
-  {name:"Molho de tomate",cat:"Alimentos",qty:3,goal:24},
-  {name:"Sardinha",cat:"Alimentos",qty:2,goal:24},
-  {name:"Capuccino",cat:"Alimentos",qty:0.2,goal:1},
-  {name:"Geleia de framboesa",cat:"Alimentos",qty:1,goal:4},
-  {name:"Café descafeinado",cat:"Alimentos",qty:0.25,goal:2},
+function normalizeCategory(name) {
+  return name.trim().toLowerCase();
+}
 
-  {name:"Papel toalha",cat:"Limpeza",qty:1,goal:6},
-  {name:"Bucha de cozinha",cat:"Limpeza",qty:8,goal:24},
-  {name:"Sabão em barra",cat:"Limpeza",qty:10,goal:24},
+function addItem() {
+  const name = itemName.value.trim();
+  const categoryRaw = itemCategory.value.trim();
+  const have = Number(itemHave.value);
+  const goal = Number(itemGoal.value);
 
-  {name:"Sabonete antibacteriano",cat:"Higiene",qty:14,goal:48},
-  {name:"Sabonete comum",cat:"Higiene",qty:7,goal:48},
-  {name:"Desodorante antibacteriano",cat:"Higiene",qty:1,goal:12},
-  {name:"Desodorante comum",cat:"Higiene",qty:1,goal:12},
-  {name:"Pasta de dente sensível",cat:"Higiene",qty:2,goal:12},
-  {name:"Pasta de dente comum",cat:"Higiene",qty:3,goal:12}
-];
+  if (!name || !categoryRaw) return;
 
-let items=JSON.parse(localStorage.getItem(KEY));
-if(!items){
-  items=baseItems.map(i=>({...i,id:Date.now()+Math.random()}));
+  const normalized = normalizeCategory(categoryRaw);
+
+  // 🔹 procura categoria existente
+  let categoryKey = Object.keys(data).find(
+    c => normalizeCategory(c) === normalized
+  );
+
+  if (!categoryKey) {
+    categoryKey = categoryRaw;
+    data[categoryKey] = [];
+  }
+
+  data[categoryKey].push({
+    name,
+    have,
+    goal
+  });
+
   save();
+  render();
 }
 
-function save(){localStorage.setItem(KEY,JSON.stringify(items))}
-
-function add(){
-  items.push({
-    id:Date.now(),
-    name:n.value,
-    cat:c.value||"Outros",
-    qty:+q.value||0,
-    goal:+g.value||0
-  });
-  save();render();
-  n.value=c.value=q.value=g.value="";
+function removeItem(category, index) {
+  data[category].splice(index,1);
+  if (data[category].length === 0) delete data[category];
+  save();
+  render();
 }
 
-function del(id){
-  items=items.filter(i=>i.id!==id);
-  save();render();
+function render() {
+  const container = document.getElementById("categories");
+  container.innerHTML = "";
+
+  for (const category in data) {
+    const catDiv = document.createElement("div");
+    catDiv.className = "category";
+
+    const title = document.createElement("h2");
+    title.textContent = category;
+    title.onclick = () => {
+      list.style.display = list.style.display === "none" ? "block" : "none";
+    };
+
+    const list = document.createElement("div");
+
+    data[category].forEach((item, i) => {
+      const div = document.createElement("div");
+      div.className = "item";
+
+      const percent = item.goal ? Math.min(100, Math.round((item.have/item.goal)*100)) : 0;
+
+      div.innerHTML = `
+        ${item.name}
+        <input type="number" value="${item.have}" onchange="data['${category}'][${i}].have=this.value;save();render()">
+        / ${item.goal}
+        <button onclick="removeItem('${category}',${i})">X</button>
+        <div class="progress"><div class="progress-bar" style="width:${percent}%"></div></div>
+      `;
+      list.appendChild(div);
+    });
+
+    catDiv.appendChild(title);
+    catDiv.appendChild(list);
+    container.appendChild(catDiv);
+  }
 }
 
-function upd(id,key,val){
-  items.find(i=>i.id===id)[key]=+val;
-  save();render();
-}
-
-function toggle(id){
-  const el=document.getElementById(id);
-  el.style.display=el.style.display==="none"?"block":"none";
-}
-
-function render(){
-  const out=document.getElementById("estoque");
-  out.innerHTML="";
-  const cats=[...new Set(items.map(i=>i.cat))];
-
-  cats.forEach(cat=>{
-    const cid="cat_"+cat.replace(/\s/g,"");
-    out.innerHTML+=`
-      <div class="category">
-        <div class="cat-header" onclick="toggle('${cid}')">${cat}</div>
-        <div class="cat-body" id="${cid}">
-          ${items.filter(i=>i.cat===cat).map(i=>{
-            const p=i.goal?Math.min(100,i.qty/i.goal*100):0;
-            const cls=p<30?"low":p<60?"mid":"";
-            return `
-            <div class="item">
-              <b>${i.name}</b><br>
-              Atual <input type="number" value="${i.qty}" onchange="upd(${i.id},'qty',this.value)">
-              Meta <input type="number" value="${i.goal}" onchange="upd(${i.id},'goal',this.value)">
-              <div class="progress ${cls}">
-                <div class="bar" style="width:${p}%"></div>
-              </div>
-              ${p<30?'<div class="alert">⚠ Estoque crítico</div>':''}
-              <button class="danger" onclick="del(${i.id})">Excluir</button>
-            </div>`;
-          }).join("")}
-        </div>
-      </div>`;
-  });
+function save() {
+  localStorage.setItem("estoque", JSON.stringify(data));
 }
 
 render();
