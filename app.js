@@ -1,5 +1,16 @@
 const KEY = "vault_stock_final_v25";
 
+// Tenta solicitar armazenamento persistente ao iniciar
+if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().then(persistent => {
+        if (persistent) {
+            console.log("SISTEMA DE ARQUIVOS: PERSISTÊNCIA ATIVADA NO BUNKER.");
+        } else {
+            console.log("SISTEMA DE ARQUIVOS: PERSISTÊNCIA NEGADA PELO DISPOSITIVO.");
+        }
+    });
+}
+
 const baseItems = [
   {name:"Arroz", cat:"ALIMENTOS", unit:"KG", qty:16, goal:48, cons:0.100, note:""},
   {name:"Feijão", cat:"ALIMENTOS", unit:"KG", qty:4, goal:24, cons:0.150, note:""},
